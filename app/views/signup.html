@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <!-- Mitigative XSS layer: CSP header -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; img-src 'self';">
 
     <title>OWASP Node Goat</title>
 
@@ -70,6 +72,7 @@
                         <div class="panel-body">
 
                             <form method="post" role="form" method="post">
+                                <!-- VULNERABLE POINT (Reflected XSS): {{userName}} -->
                                 <div class="form-group">
                                     <label for="userName">User Name</label>
                                     <input type="text" class="form-control" id="userName" value="{{userName}}" name="userName" placeholder="Enter user name">
@@ -96,7 +99,7 @@
                                     <input type="password" class="form-control" id="verify" name="verify" value="{{verify}}" placeholder="Enter password">
                                 </div>
 
-
+                                <!-- VULNERABLE POINT (Reflected XSS): {{userName}} -->
                                 <div class="form-group">
                                     <label for="verify">Email (Optional)</label>
                                     <input type="email" class="form-control" id="email" name="email" value="{{email}}" placeholder="Enter email">

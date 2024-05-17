@@ -7,7 +7,7 @@ const session = require("express-session");
 // const csrf = require('csurf');
 const consolidate = require("consolidate"); // Templating library adapter for Express
 const swig = require("swig");
-// const helmet = require("helmet");
+const helmet = require("helmet");
 const MongoClient = require("mongodb").MongoClient; // Driver for connecting to MongoDB
 const http = require("http");
 const marked = require("marked");
@@ -101,6 +101,8 @@ MongoClient.connect(db, (err, db) => {
 
     }));
 
+
+    //app.use(helmet());
     /*
     // Fix for A8 - CSRF
     // Enable Express csrf protection
@@ -139,6 +141,14 @@ MongoClient.connect(db, (err, db) => {
         // Fix for A3 - XSS, enable auto escaping
         autoescape: true // default value
         */
+    });
+
+    /*
+    Mitigative process: enabling HTML encoding
+    */
+    swig.init({
+        root: __dirname + "/app/views",
+        autoescape: true
     });
 
     // Insecure HTTP connection
