@@ -76,29 +76,19 @@ MongoClient.connect(db, (err, db) => {
 
     // Enable session management using express middleware
     app.use(session({
-        // genid: (req) => {
-        //    return genuuid() // use UUIDs for session IDs
-        //},
         secret: cookieSecret,
         // Both mandatory in Express v4
         saveUninitialized: true,
-        resave: true
-        /*
-        // Fix for A5 - Security MisConfig
-        // Use generic cookie name
-        key: "sessionId",
-        */
+        resave: true,
 
         /*
-        // Fix for A3 - XSS
-        // TODO: Add "maxAge"
+        Mitigative XSS layer: enabling HTTPOnly flag for the session cookie
+        This will only work for HTTPS
+        */
         cookie: {
-            httpOnly: true
-            // Remember to start an HTTPS server to get this working
-            // secure: true
+            httpOnly: true,
+            secure: true    // HTTPS, so won't work with current protocol
         }
-        */
-
     }));
 
 
@@ -136,7 +126,7 @@ MongoClient.connect(db, (err, db) => {
     // Template system setup
     swig.setDefaults({
         // Autoescape disabled
-        autoescape: false
+        autoescape: true
         /*
         // Fix for A3 - XSS, enable auto escaping
         autoescape: true // default value
