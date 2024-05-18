@@ -107,7 +107,18 @@
 
 
                             <form method="post" role="form" method="post" id="loginform">
-                                <!-- VULNERABLE POINT: {{userName}} -->
+                                <!--
+                                VULNERABLE POINT: {{userName}}
+                                Mitigative XSS layer: Character escaping
+
+                                How does it work?
+                                Characters are escaped, making sure that no malicious script is executed. Before the value
+                                of 'email' is sent to the client, it is injected into the HTML, and then escaping.
+
+                                This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
+                                into string
+                                -->
+                                
                                 <div class="form-group">
                                     <label for="userName">User Name</label>
                                     <input type="text" class="form-control" id="userName" name="userName" value="{{userName}}" placeholder="Enter User Name">

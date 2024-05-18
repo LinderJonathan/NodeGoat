@@ -72,7 +72,18 @@
                         <div class="panel-body">
 
                             <form method="post" role="form" method="post">
-                                <!-- VULNERABLE POINT (Reflected XSS): {{userName}} -->
+                                <!--
+                                VULNERABLE POINT (Reflected XSS): {{userName}}
+                                Mitigative XSS layer: Character escaping
+
+                                How does it work?
+                                Characters are escaped, making sure that no malicious script is executed. Before the value
+                                of 'email' is sent to the client, it is injected into the HTML, and then escaping.
+
+                                This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
+                                into string
+                                -->
+                                
                                 <div class="form-group">
                                     <label for="userName">User Name</label>
                                     <input type="text" class="form-control" id="userName" value="<%= userName %>" name="userName" placeholder="Enter user name">
@@ -99,7 +110,17 @@
                                     <input type="password" class="form-control" id="verify" name="verify" value="{{verify}}" placeholder="Enter password">
                                 </div>
 
-                                <!-- VULNERABLE POINT (Reflected XSS): {{email}} -->
+                                <!-- 
+                                VULNERABLE POINT (Reflected XSS): {{email}}
+                                Mitigative XSS layer: Character escaping
+
+                                How does it work?
+                                Characters are escaped, making sure that no malicious script is executed. Before the value
+                                of 'email' is sent to the client, it is injected into the HTML, and then escaping.
+
+                                This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
+                                into string
+                                -->
                                 <div class="form-group">
                                     <label for="verify">Email (Optional)</label>
                                     <input type="email" class="form-control" id="email" name="email" value="<%= email %>" placeholder="Enter email">

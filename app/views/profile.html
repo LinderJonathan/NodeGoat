@@ -36,6 +36,18 @@
             </div>
             <div class="panel-body">
                 <form role="form" method="post" action="/profile">
+                    <!--
+                    VULNERABLE POINTS: inputs
+
+                    The below inputs are highly prone to malicious injections. In the application, these inputs are stored
+                    and are thus subject to persistent (stored) XSS attacks. No character encoding is done, and simple
+                    JavaScript can execute on the client side, i.e. <script>alert(1)</script>
+
+                    It can be prevented on the server-side before anything is sent to the client-side.
+
+                    See profile.js for implemented mitigations.
+
+                    -->
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName" value="{{firstNameSafeString}}" placeholder="Enter first name">
