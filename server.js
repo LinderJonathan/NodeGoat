@@ -85,9 +85,10 @@ MongoClient.connect(db, (err, db) => {
         Mitigative XSS layer: enabling HTTPOnly flag for the session cookie
         This will only work for HTTPS
         */
+
         cookie: {
-            httpOnly: true,
-            secure: true    // HTTPS, so won't work with current protocol
+            httpOnly: true
+            //secure: true    // HTTPS, so won't work with current protocol
         }
     }));
 
@@ -124,23 +125,16 @@ MongoClient.connect(db, (err, db) => {
     routes(app, db);
 
     // Template system setup
+    
+    /*
+    Mitigative XSS layer: enabling HTML encoding
+    */
     swig.setDefaults({
         // Autoescape disabled
-        autoescape: true
-        /*
-        // Fix for A3 - XSS, enable auto escaping
-        autoescape: true // default value
-        */
+        root: __dirname + "/app/views",
+        autoescape: true    // default
     });
 
-    /*
-    Mitigative process: enabling HTML encoding
-    
-    swig.init({
-        root: __dirname + "/app/views",
-        autoescape: true
-    });
-    */
     // Insecure HTTP connection
     http.createServer(app).listen(port, () => {
         console.log(`Express http server listening on port ${port}`);
