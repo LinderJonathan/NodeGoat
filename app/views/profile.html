@@ -37,15 +37,16 @@
             <div class="panel-body">
                 <form role="form" method="post" action="/profile">
                     <!--
-                    VULNERABLE POINTS: inputs
+                    VULNERABLE POINTS: below inputs
 
                     The below inputs are highly prone to malicious injections. In the application, these inputs are stored
                     and are thus subject to persistent (stored) XSS attacks. No character encoding is done, and simple
                     JavaScript can execute on the client side, i.e. <script>alert(1)</script>
 
-                    It can be prevented on the server-side before anything is sent to the client-side.
-
-                    See profile.js for implemented mitigations.
+                    It can be prevented on the server-side before anything is sent to the client-side. Another possible 
+                    mitigations is to also add character escaping, i.e. "<%= lastName %>""
+                        
+                    See profile.js for further implemented mitigation(s)
 
                     -->
                     <div class="form-group">

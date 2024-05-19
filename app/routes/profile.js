@@ -25,10 +25,18 @@ function ProfileHandler(db) {
             // while the developer intentions were correct in encoding the user supplied input so it
             // doesn't end up as an XSS attack, the context is incorrect as it is encoding the firstname for HTML
             // while this same variable is also used in the context of a URL link element
+            /*
+            VULNERABLE POINTS: URL context not encoded
+
+            Mitigative XSS layer: also encode for URL contexts
+            See below for encoding 
+            
+            */
             doc.website = ESAPI.encoder().encodeForHTML(doc.website);
             // fix it by replacing the above with another template variable that is used for 
             // the context of a URL in a link header
-            // doc.website = ESAPI.encoder().encodeForURL(doc.website)
+
+            //doc.website = ESAPI.encoder().encodeForURL(doc.website);
 
             return res.render("profile", {
                 ...doc,
@@ -59,6 +67,10 @@ function ProfileHandler(db) {
         const regexPattern = /([0-9]+)+\#/;
         // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
         const testComplyWithRequirements = regexPattern.test(bankRouting);
+        // TODO: sanitize inputs here
+
+        //const lastNameSanitized = lastName.toString();
+
         // if the regex test fails we do not allow saving
         if (testComplyWithRequirements !== true) {
             const firstNameSafeString = firstName;
