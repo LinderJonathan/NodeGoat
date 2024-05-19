@@ -27,15 +27,17 @@ function ProfileHandler(db) {
             // while this same variable is also used in the context of a URL link element
             /*
             VULNERABLE POINTS: URL context not encoded
-
-            Mitigative XSS layer: also encode for URL contexts
-            See below for encoding 
-            
             */
+
+
             doc.website = ESAPI.encoder().encodeForHTML(doc.website);
             // fix it by replacing the above with another template variable that is used for 
             // the context of a URL in a link header
 
+            /*
+            Mitigative XSS layer: also encode for URL contexts
+            See below for encoding
+            */
             doc.website = ESAPI.encoder().encodeForURL(doc.website);
 
             return res.render("profile", {
