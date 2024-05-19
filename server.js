@@ -1,5 +1,8 @@
 "use strict";
 
+// Adding the libs that encodes encodes input fields
+const sanitizeHtml = require("sanitize-html");
+
 const express = require("express");
 const favicon = require("serve-favicon");
 const bodyParser = require("body-parser");
@@ -90,6 +93,7 @@ MongoClient.connect(db, (err, db) => {
             httpOnly: true
             //secure: true    // HTTPS, so won't work with current protocol
         }
+        
     }));
 
 
@@ -127,12 +131,14 @@ MongoClient.connect(db, (err, db) => {
     // Template system setup
     
     /*
-    Mitigative XSS layer: enabling HTML encoding
+    Mitigative XSS layer: enabling HTML encoding (WORKS) for the pages
+
+    See profile.js on more specific input field encodings
     */
     swig.setDefaults({
         // Autoescape disabled
-        root: __dirname + "/app/views",
-        autoescape: true    // default
+        //root: __dirname + "/app/views",
+        autoescape: false    // default: true
     });
 
     // Insecure HTTP connection
