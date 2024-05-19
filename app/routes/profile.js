@@ -91,18 +91,33 @@ function ProfileHandler(db) {
             userId
         } = req.session;
         
-        // NICE! This encoding works to prevent stored XSS
-        const lastNameSanitized = sanitizeHtml(lastName)
+        /*
+        Mitigative XSS layer: Encode all user inputs
         
+        This sanitization works to prevent stored XSS. While this sanitization defaults to blocking
+        all HTML, it can be specified which tags or attributes should be allowed. For instance, a <b>bold</b> is mostly
+        harmless, and is sometimes part of functionality. By creating a whitelist on tags and attributes, 
+        then can bypass sanitization.
+
+        TODO: construct example of input validation
+        */
+        const firstNameSanitized = sanitizeHtml(firstName);
+        const lastNameSanitized = sanitizeHtml(lastName);
+        const ssnSanitized = sanitizeHtml(ssn);
+        const dobSanitized = sanitizeHtml(dob);
+        const addressSanitized= sanitizeHtml(address);
+        const bankAccSanitized = sanitizeHtml(bankAcc);
+        const bankRoutingSanitized= sanitizeHtml(bankRouting);
+
         profile.updateUser(
             parseInt(userId),
-            firstName,
-            lastName,
-            ssn,
-            dob,
-            address,
-            bankAcc,
-            bankRouting,
+            firstNameSanitized,
+            lastNameSanitized,
+            ssnSanitized,
+            dobSanitized,
+            addressSanitized,
+            bankAccSanitized,
+            bankRoutingSanitized,
             (err, user) => {
 
                 if (err) return next(err);
