@@ -64,21 +64,26 @@ function ProfileHandler(db) {
         // --
         // The Fix: Instead of using greedy quantifiers the same regex will work if we omit the second quantifier +
         // const regexPattern = /([0-9]+)\#/;
-        const regexPattern = /([0-9]+)+\#/;
-        // strictly allows upper/lower alphabetical chars and '-', ' ' '
-        const regexTextField = /^[A-Za-Z]+(['-][A-Za-Z]+)*$/; 
 
         // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
+        const regexPattern = /([0-9]+)+\#/;
         const testComplyWithRequirements = regexPattern.test(bankRouting);
+
+        // strictly allows upper/lower alphabetical chars and '-', ' ' '
+        /*
+        Mitigative XSS layer: Validating user input with Regular Expressions
+
+        By validating each input for each field according to regex patterns, bypassing with malicious attacks becomes
+        difficult. Here, NodeGoat already provided the regex pattern for 
+        */
+        const regexTextField = /^[a-zA-Z\s-]+$/;
+        const testFirstName = regexTextField.test(lastName);
         const testLastName = regexTextField.test(lastName);
 
-        // TODO: add the CHECK
-
-        // if the regex test fails we do not allow saving
-        if (testComplyWithRequirements !== true) {
+        function profileRender(errorResponse) {
             const firstNameSafeString = firstName;
             return res.render("profile", {
-                updateError: "Bank Routing number does not comply with requirements for format specified",
+                updateError: errorResponse,
                 firstNameSafeString,
                 lastName,
                 ssn,
@@ -88,6 +93,15 @@ function ProfileHandler(db) {
                 bankRouting,
                 environmentalScripts
             });
+        }
+        if (testFirstName !== true) {
+            profileRender("Sorry, first names only contain lower/upper case letters and binders/apostrophes");
+        }
+        else if (testLastName !== true) {
+            profileRender("Sorry, last names contain lower/upper case letters and binders/apostrophes");       
+        }
+        else if (testComplyWithRequirements !== true) {
+            profileRender("Bank Routing number does not comply with requirements for format specified");
         }
 
         const {
