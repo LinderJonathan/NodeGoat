@@ -7,7 +7,7 @@
     <meta name="description" content="OWASP NodeGoat Project: Insecure App">
     <meta name="version" content="v1.2">
     <!-- Mitigative XSS layer: CSP header --> 
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; img-src 'self'; frame-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; img-src 'self';">
 
     <title>OWASP Node Goat</title>
 
@@ -118,10 +118,18 @@
                                 This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
                                 into string
                                 -->
-                                
+                                <script>
+                                    const encodingUserName = (str) => 
+                                    str.replace(/&/g, '&amp;')
+                                    .replace(/</g, '&lt;')
+                                    .replace(/>/g, '&gt;')
+                                    .replace(/"/g, '&quot;')
+                                    .replace(/'/g, '&#39;');
+
+                                </script>
                                 <div class="form-group">
                                     <label for="userName">User Name</label>
-                                    <input type="text" class="form-control" id="userName" name="<%= userName %>" value="{{userName}}" placeholder="Enter User Name">
+                                    <input type="text" class="form-control" id="userName" name="userName" value="{{encodingUserName(userName)}}" placeholder="Enter User Name">
                                 </div>
 
                                 <div class="form-group">
