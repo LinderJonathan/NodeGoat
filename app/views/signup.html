@@ -73,7 +73,7 @@
 
                             <form method="post" role="form" method="post">
                                 <!--
-                                VULNERABLE POINT (Reflected XSS): {{userName}}
+                                VULNERABLE POINT (Reflected XSS): user name value
                                 Mitigative XSS layer: Character escaping
 
                                 How does it work?
@@ -83,10 +83,18 @@
                                 This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
                                 into string
                                 -->
-                                
+                                <script>
+                                    const encodingValue = (inputValue) => 
+                                    inputValue.replace(/&/g, '&amp;')
+                                    .replace(/</g, '&lt;')
+                                    .replace(/>/g, '&gt;')
+                                    .replace(/"/g, '&quot;')
+                                    .replace(/'/g, '&#39;');
+
+                                </script>
                                 <div class="form-group">
                                     <label for="userName">User Name</label>
-                                    <input type="text" class="form-control" id="userName" value="<%= userName %>" name="userName" placeholder="Enter user name">
+                                    <input type="text" class="form-control" id="userName" value="{{encodingValue(userName)}}" name="userName" placeholder="Enter user name">
                                 </div>
 
                                 <div class="form-group">
@@ -111,7 +119,7 @@
                                 </div>
 
                                 <!-- 
-                                VULNERABLE POINT (Reflected XSS): {{email}}
+                                VULNERABLE POINT (Reflected XSS): email value
                                 Mitigative XSS layer: Character escaping
 
                                 How does it work?
@@ -123,7 +131,7 @@
                                 -->
                                 <div class="form-group">
                                     <label for="verify">Email (Optional)</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="<%= email %>" placeholder="Enter email">
+                                    <input type="email" class="form-control" id="email" name="email" value="{{encodingValue(email)}}" placeholder="Enter email">
                                 </div>
                                 <input type="hidden" name="_csrf" value="{{csrftoken}}"></input>
                                 <button type="submit" class="btn btn-primary">Submit</button>

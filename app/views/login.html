@@ -108,19 +108,22 @@
 
                             <form method="post" role="form" method="post" id="loginform">
                                 <!--
-                                VULNERABLE POINT: {{userName}}
+                                VULNERABLE POINT: user name
                                 Mitigative XSS layer: Character escaping
 
                                 How does it work?
                                 Characters are escaped, making sure that no malicious script is executed. Before the value
                                 of 'email' is sent to the client, it is injected into the HTML, and then escaping.
 
-                                This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
-                                into string
+                                This "wrapping" of email with '<%= %>' encodes and escapes characters and is 
+                                another approach to mitigate. Since this web applicationis built on the
+                                express framework, the template engine EJS is in use and handles this.
+
+                                Initially Handlebars was used, '{{}}', but the attack vector was still able to bypass.
                                 -->
                                 <script>
-                                    const encodingUserName = (str) => 
-                                    str.replace(/&/g, '&amp;')
+                                    const encodingUserName = (inputValue) => 
+                                    inputValue.replace(/&/g, '&amp;')
                                     .replace(/</g, '&lt;')
                                     .replace(/>/g, '&gt;')
                                     .replace(/"/g, '&quot;')
