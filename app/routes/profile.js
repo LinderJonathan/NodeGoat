@@ -65,11 +65,14 @@ function ProfileHandler(db) {
         // The Fix: Instead of using greedy quantifiers the same regex will work if we omit the second quantifier +
         // const regexPattern = /([0-9]+)\#/;
         const regexPattern = /([0-9]+)+\#/;
+        // strictly allows upper/lower alphabetical chars and '-', ' ' '
+        const regexTextField = /^[A-Za-Z]+(['-][A-Za-Z]+)*$/; 
+
         // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
         const testComplyWithRequirements = regexPattern.test(bankRouting);
-        // TODO: sanitize inputs here
+        const testLastName = regexTextField.test(lastName);
 
-        //const lastNameSanitized = lastName.toString();
+        // TODO: add the CHECK
 
         // if the regex test fails we do not allow saving
         if (testComplyWithRequirements !== true) {
@@ -97,10 +100,10 @@ function ProfileHandler(db) {
         This sanitization works to prevent stored XSS. While this sanitization defaults to blocking
         all HTML, it can be specified which tags or attributes should be allowed. For instance, a <b>bold</b> is mostly
         harmless, and is sometimes part of functionality. By creating a whitelist on tags and attributes, 
-        then can bypass sanitization.
-
-        TODO: construct example of input validation
+        then can bypass sanitization
         */
+
+
         const firstNameSanitized = sanitizeHtml(firstName);
         const lastNameSanitized = sanitizeHtml(lastName);
         const ssnSanitized = sanitizeHtml(ssn);
