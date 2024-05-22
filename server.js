@@ -89,7 +89,6 @@ MongoClient.connect(db, (err, db) => {
         Mitigative XSS layer: enabling HTTPOnly flag for the session cookie
         This will only work for HTTPS however
         */
-
         cookie: {
             httpOnly: true
             //secure: true    // HTTPS, so won't work with current protocol
