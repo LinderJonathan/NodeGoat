@@ -31,6 +31,7 @@ function ProfileHandler(db) {
             VULNERABLE POINTS: URL context not encoded
             */
             doc.website = ESAPI.encoder().encodeForHTML(doc.website);
+            doc.website = ESAPI.encoder().encodeForJavaScript(doc.website);
 
             /*
             Mitigative XSS layer: also encode for URL contexts
@@ -114,7 +115,7 @@ function ProfileHandler(db) {
         This sanitization works to prevent stored XSS. While this sanitization defaults to blocking
         all HTML, it can be specified which tags or attributes should be allowed. For instance, a <b>bold</b> is mostly
         harmless, and is sometimes part of functionality. By creating a whitelist on tags and attributes, 
-        then can bypass sanitization
+        they can bypass sanitization
         */
 
 

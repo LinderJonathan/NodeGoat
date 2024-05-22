@@ -44,19 +44,28 @@
                     JavaScript can execute on the client side, i.e. <script>alert(1)</script>
 
                     It can be prevented on the server-side before anything is sent to the client-side. Another possible 
-                    mitigations is to also add character escaping, i.e. "<%= lastName %>""
+                    mitigations is to also add a template engine (EJS), i.e. "<%= lastName %>""
                         
                     See profile.js for further implemented mitigation(s)
 
                     TODO: add CSP header, add output encoding (<%= %>)
                     -->
+                    <script>
+                        const encodingValue = (inputValue) => 
+                        inputValue.replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
+
+                    </script>
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" class="form-control" id="firstName" name="firstName" value="<%=firstNameSafeString%>" placeholder="Enter first name">
+                        <input type="text" class="form-control" id="firstName" name="firstName" value="{{encodingValue(firstNameSafeString)}}" placeholder="Enter first name">
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" name="lastName" value="<%=lastName%>" placeholder="Enter last name">
+                        <input type="text" class="form-control" id="lastName" name="lastName" value="{{encodingValue(lastName)}}" placeholder="Enter last name">
                     </div>
                     <div class="form-group">
                         <label for="ssn">SSN</label>

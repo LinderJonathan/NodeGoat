@@ -122,7 +122,7 @@
                                 Initially Handlebars was used, '{{}}', but the attack vector was still able to bypass.
                                 -->
                                 <script>
-                                    const encodingUserName = (inputValue) => 
+                                    const encodingValue = (inputValue) => 
                                     inputValue.replace(/&/g, '&amp;')
                                     .replace(/</g, '&lt;')
                                     .replace(/>/g, '&gt;')
@@ -132,12 +132,12 @@
                                 </script>
                                 <div class="form-group">
                                     <label for="userName">User Name</label>
-                                    <input type="text" class="form-control" id="userName" name="userName" value="{{encodingUserName(userName)}}" placeholder="Enter User Name">
+                                    <input type="text" class="form-control" id="userName" name="userName" value="{{encodingValue(userName)}}" placeholder="Enter User Name">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" value="{{password}}" placeholder="Enter Password">
+                                    <input type="password" class="form-control" id="password" name="password" value="{{encodingValue(password)}}" placeholder="Enter Password">
                                 </div>
                                 <input type="hidden" name="_csrf" value="{{csrftoken}}" />
 

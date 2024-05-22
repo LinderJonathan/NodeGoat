@@ -1,6 +1,6 @@
 "use strict";
 
-// Adding the libs that encodes encodes input fields
+// Adding the libs that encodes input fields
 const sanitizeHtml = require("sanitize-html");
 
 const express = require("express");
@@ -13,6 +13,7 @@ const swig = require("swig");
 // const helmet = require("helmet");
 const MongoClient = require("mongodb").MongoClient; // Driver for connecting to MongoDB
 const http = require("http");
+const https = require("https");
 const marked = require("marked");
 //const nosniff = require('dont-sniff-mimetype');
 const app = express(); // Web framework to handle routing requests
@@ -86,7 +87,7 @@ MongoClient.connect(db, (err, db) => {
 
         /*
         Mitigative XSS layer: enabling HTTPOnly flag for the session cookie
-        This will only work for HTTPS
+        This will only work for HTTPS however
         */
 
         cookie: {
@@ -131,7 +132,9 @@ MongoClient.connect(db, (err, db) => {
     // Template system setup
     
     /*
-    Mitigative XSS layer: enabling HTML encoding (WORKS) for the pages
+    Mitigative XSS layer: another character escaping layer on the server side.
+    'autoescape: true' works globally and is a simply yet very effective solution to 
+    encoding malicious payloads.
 
     See profile.js on more specific input field encodings
     */
