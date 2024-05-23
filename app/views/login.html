@@ -7,7 +7,7 @@
     <meta name="description" content="OWASP NodeGoat Project: Insecure App">
     <meta name="version" content="v1.2">
     <!-- Mitigative XSS layer: CSP header --> 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self'; style-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self'; style-src 'self'">
 
     <title>OWASP Node Goat</title>
 
@@ -108,17 +108,15 @@
 
                             <form method="post" role="form" method="post" id="loginform">
                                 <!--
-                                VULNERABLE POINT: user name
+                                VULNERABLE POINT(S): value of user name (ZAP)
                                 Mitigative XSS layer: Character escaping
 
                                 How does it work?
                                 Characters are escaped with the 'encodingValue' function, making sure that no malicious script is 
-                                executed. 
-                                This "wrapping" of email with '<%= %>' encodes and escapes characters and is 
-                                another approach to mitigate. Since this web applicationis built on the
-                                express framework, the template engine EJS is in use and handles this.
+                                executed.
 
-                                Initially Handlebars was used, '{{}}', but the attack vector was still able to bypass.
+                                This "wrapping" of email with '<%= %>' escapes execution of i.e. a script by converting the value
+                                into string
                                 -->
                                 <script>
                                     const encodingValue = (inputValue) => 

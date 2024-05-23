@@ -1,7 +1,5 @@
 "use strict";
 
-// Adding the libs that encodes input fields
-const sanitizeHtml = require("sanitize-html");
 
 const express = require("express");
 const favicon = require("serve-favicon");
@@ -13,15 +11,14 @@ const swig = require("swig");
 // const helmet = require("helmet");
 const MongoClient = require("mongodb").MongoClient; // Driver for connecting to MongoDB
 const http = require("http");
-const https = require("https");
 const marked = require("marked");
 //const nosniff = require('dont-sniff-mimetype');
 const app = express(); // Web framework to handle routing requests
 const routes = require("./app/routes");
 const { port, db, cookieSecret } = require("./config/config"); // Application config properties
-/*
-// Fix for A6-Sensitive Data Exposure
-// Load keys for establishing secure HTTPS connection
+// using express-waf as protective firewall
+//const easyWaf = require("easy-waf");
+
 const fs = require("fs");
 const https = require("https");
 const path = require("path");
@@ -29,7 +26,10 @@ const httpsOptions = {
     key: fs.readFileSync(path.resolve(__dirname, "./artifacts/cert/server.key")),
     cert: fs.readFileSync(path.resolve(__dirname, "./artifacts/cert/server.crt"))
 };
+/*
+Mitigative XSS layer: Setting up a WAF
 */
+//app.use(easyWaf());
 
 MongoClient.connect(db, (err, db) => {
     if (err) {
@@ -84,19 +84,33 @@ MongoClient.connect(db, (err, db) => {
         // Both mandatory in Express v4
         saveUninitialized: true,
         resave: true,
-
         /*
         Mitigative XSS layer: enabling HTTPOnly flag for the session cookie
         This will only work for HTTPS however
+        Navigate manually to https://localhost:4000/ to explose
         */
         cookie: {
-            httpOnly: true
-            //secure: true    // HTTPS, so won't work with current protocol
+            httpOnly: true,
+            secure: true    // Setting Secure HTTP (HTTPS)
         }
         
     }));
 
 
+    /*
+    app.use(
+        easyWaf({
+            ipBlacklist: ['1.1.1.1', '2.2.2.2'],
+            ipWhitelist: ['::1', '172.16.0.0/12'],
+            modules: {
+                directoryTraversal: {
+                    enabled: true,
+                    excludePaths: /^\/exclude\/$/i,
+                },
+            },
+        }),
+    );
+    */
     //app.use(helmet());
     /*
     // Fix for A8 - CSRF
@@ -143,17 +157,18 @@ MongoClient.connect(db, (err, db) => {
         autoescape: false    // default: true
     });
 
+    /*
     // Insecure HTTP connection
     http.createServer(app).listen(port, () => {
         console.log(`Express http server listening on port ${port}`);
     });
-
-    /*
+    */
+    
     // Fix for A6-Sensitive Data Exposure
     // Use secure HTTPS protocol
     https.createServer(httpsOptions, app).listen(port, () => {
         console.log(`Express http server listening on port ${port}`);
     });
-    */
+    
 
 });

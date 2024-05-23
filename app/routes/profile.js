@@ -69,7 +69,7 @@ function ProfileHandler(db) {
 
         // Allow only upper/lower alphabetical chars
         const regexTextField = /^[a-zA-Z\s-]+$/;
-        const testFirstName = regexTextField.test(lastName);
+        const testFirstName = regexTextField.test(firstName);
         const testLastName = regexTextField.test(lastName);
         
 
