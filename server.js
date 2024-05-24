@@ -87,11 +87,13 @@ MongoClient.connect(db, (err, db) => {
         /*
         Mitigative XSS layer: enabling HTTPOnly flag for the session cookie
         This will only work for HTTPS however
-        Navigate manually to https://localhost:4000/ to explose
+        Navigate manually to https://localhost:4000/ to explore
+
+        NOTE: ZAP is unnable to scan https, so disable when scanning
         */
         cookie: {
             httpOnly: true,
-            secure: true    // Setting Secure HTTP (HTTPS)
+            //secure: true    // Setting Secure HTTP (HTTPS)
         }
         
     }));
@@ -145,30 +147,30 @@ MongoClient.connect(db, (err, db) => {
     // Template system setup
     
     /*
-    Mitigative XSS layer: another character escaping layer on the server side.
-    'autoescape: true' works globally and is a simply yet very effective solution to 
-    encoding malicious payloads.
+    Mitigative XSS layer: Character escaping layer on the server side.
+    'autoescape: true' works by escaping HTML-content in variablesand is a 
+    simply yet very effective solution to escape malicious payloads.
 
     See profile.js on more specific input field encodings
     */
     swig.setDefaults({
-        // Autoescape disabled
+        // Autoescape enabled
         //root: __dirname + "/app/views",
-        autoescape: false    // default: true
+        autoescape: true    // default: true
     });
 
-    /*
+    
     // Insecure HTTP connection
     http.createServer(app).listen(port, () => {
         console.log(`Express http server listening on port ${port}`);
     });
-    */
     
-    // Fix for A6-Sensitive Data Exposure
-    // Use secure HTTPS protocol
+    
+    /*
+    Use this instead of HTTP. However ZAP is unnable to scan when in use
     https.createServer(httpsOptions, app).listen(port, () => {
         console.log(`Express http server listening on port ${port}`);
     });
-    
+    */    
 
 });

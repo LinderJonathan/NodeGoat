@@ -22,12 +22,11 @@ function ProfileHandler(db) {
             if (err) return next(err);
             doc.userId = userId;
 
-            doc.website = ESAPI.encoder().encodeForHTML(doc.website); // already in place by NodeGoat contributor
             /*
-            Mitigative XSS layer: encoding upon load of the page. Apart from OWASP's encoding of HTML
-            also encode for URL and JavaScript contexts.
+            Mitigative XSS layer: encoding HTML upon load of the page. Apart from OWASP's encoding of HTML
+            also encode for URL contexts.
             */
-            doc.website = ESAPI.encoder().encodeForJavaScript(doc.website);
+            doc.website = ESAPI.encoder().encodeForHTML(doc.website); // already in place by NodeGoat contributor
             doc.website = ESAPI.encoder().encodeForURL(doc.website);
 
             return res.render("profile", {
@@ -73,7 +72,7 @@ function ProfileHandler(db) {
         const testLastName = regexTextField.test(lastName);
         
 
-        function profileRender(errorResponse) {
+        function profileErrorRender(errorResponse) {
             const firstNameSafeString = firstName;
             return res.render("profile", {
                 updateError: errorResponse,
@@ -94,13 +93,13 @@ function ProfileHandler(db) {
         won't update the fields
         */
         if (testFirstName !== true) {
-            profileRender("Sorry, first names only contain lower/upper case letters and binders/apostrophes");
+            profileErrorRender("Sorry, first names only contain lower/upper case letters and binders/apostrophes");
         }
         if (testLastName !== true) {
-            profileRender("Sorry, last names contain lower/upper case letters and binders/apostrophes");       
+            profileErrorRender("Sorry, last names contain lower/upper case letters and binders/apostrophes");       
         }
         if (testComplyWithRequirements !== true) {
-            profileRender("Bank Routing number does not comply with requirements for format specified");
+            profileErrorRender("Bank Routing number does not comply with requirements for format specified");
         }
 
         const {
@@ -120,14 +119,13 @@ function ProfileHandler(db) {
         Incredibly important that we sanitize BEFORE we update the user's profile
         */
 
-
         const firstNameSanitized = sanitizeHtml(firstName);
         const lastNameSanitized = sanitizeHtml(lastName);
         const ssnSanitized = sanitizeHtml(ssn);
         const dobSanitized = sanitizeHtml(dob);
-        const addressSanitized= sanitizeHtml(address);
+        const addressSanitized = sanitizeHtml(address);
         const bankAccSanitized = sanitizeHtml(bankAcc);
-        const bankRoutingSanitized= sanitizeHtml(bankRouting);
+        const bankRoutingSanitized = sanitizeHtml(bankRouting);
 
         profile.updateUser(
             parseInt(userId),
